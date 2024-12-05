@@ -13,6 +13,7 @@ import { Home } from "./components/Home";
 import AddProduct from "./components/Products/AddProduct";
 import { ProductList } from "./components/Products/ProductList";
 import Logout from "./components/Logout";
+import User from "./components/UserComponets/Users";
 
 function App() {
   // const { loading } = useSelector(state => state.alert);
@@ -60,7 +61,9 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="*" element={<PageNoteFound />} />
+          <Route path="/createuser" element = {<User/>}/>
         </Routes>
+        
       }
     </Router>
   );

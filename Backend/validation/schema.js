@@ -25,4 +25,22 @@ exports.registrationSchema = Joi.object({
 exports.loginSchema = Joi.object({
     Email: Joi.string().email().required(),
     password: Joi.string().required()
-})
+});
+
+exports.forgotPasswordSchema = Joi.object({
+    email: Joi.string().email().required()
+});
+exports.restetPasswordSchema = Joi.object({
+    password: Joi.string().required().min(6)
+});
+
+exports.addProductSchema = Joi.object({
+    code: Joi.string().required().min(1),
+    iteam: Joi.string().required().min(2),
+    price: Joi.number().required().min(5),
+    quantity: Joi.number()
+});
+
+exports.delateUserSchema = Joi.object({
+    user_id: Joi.string().required()
+});

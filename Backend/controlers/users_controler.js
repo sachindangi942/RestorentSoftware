@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 
-const { create_token, check_token } = require("../Middleware/authMiddleware");
+const { create_token, getToken_data } = require("../Middleware/authMiddleware");
 const { registration_val, login_val, add_product_val, forgot_password_val, reset_password_val, change_password_val } = require("../validation/validation");
 const addProduct = require("../Models/add_product_schema");
 const User_schema = require("../Models/schema");
@@ -56,10 +56,12 @@ const login_control = async (req, res) => {
         const { error } = login_val({ data: user_data })
         if (error) return res.status(401).send(error.details.map(err => err.message));
         const db_data = await userSchema.findOne({ Email: user_data.Email } ?? { Mobile: user_data.Mobile });
+        const { Email, _id, role } = db_data;
         if (db_data?.password && db_data?.Email) {
             const isMatch_password = bcrypt.compareSync(user_data.password, db_data["password"]);
             if (isMatch_password) {
-                const token = create_token({ data: user_data },);
+                const data = { Email, _id, role }
+                const token = create_token({ data },);
                 return res.send({ token, msg: "login successfull" });
             }
         }
@@ -238,19 +240,30 @@ const delete_product_controler = async (req, res) => {
 //____________________________________________________________________________________
 //____________________________________________________________________________________
 //____________________________________________________________________________________
-const create_controler = async (req, res) => {
+const createUser_controler = async (req, res) => {
     let data = req.body;
     try {
-        const decode = check_token(data)
-        console.log(_id);
+        const { _id: create_by } = getToken_data({ headers: req.headers });
+        data["create_by"] = create_by
         const hash_password = bcrypt.hashSync(data["password"], saltRounds);
         data["password"] = hash_password
         const newData = new userSchema(data);
-        const resp = await newData.save();
-        res.send({ resp,_id })
+        let resp = await newData.save();
+        res.send({ resp })
     } catch (error) {
-        console.log(error.errmsg)
-        res.status(401).send({ error, data })
+        res.status(401).send({ error: error.errmsg })
+    }
+};
+
+const deleteUser_controler = async (req, res) => {
+    const { Email } = req.body;
+    try {
+        const { _id: create_by } = getToken_data({ headers: req.headers });
+        const response = await userSchema.deleteOne({ Email, create_by });
+        if (response?.deletedCount === 0) return res.status(402).send("No User found with given user_id");
+        res.send({ msg: "user successfully deleted" });
+    } catch (error) {
+        res.status(402).send(error);
     }
 }
 //____________________________________________________________________________________//
@@ -266,7 +279,8 @@ module.exports = {
     fetch_product_controler,
     update_product_controler,
     delete_product_controler,
-    create_controler
+    createUser_controler,
+    deleteUser_controler
 }
 
 

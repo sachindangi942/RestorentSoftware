@@ -19,6 +19,7 @@ const MyForm = () => {
     const dispatch = useDispatch();
     const [usrData, setUsrData] = useState({})
     const [err, setErr] = useState({})
+    
     const onChangeEvent = (obj) => {
         setUsrData((lastValue) => {
             lastValue[obj.id] = obj.value;
@@ -40,10 +41,10 @@ const MyForm = () => {
 
             }
             setErr("")
-            err ? dispatch(hideloading()) : dispatch(showloading()) 
+            err ? dispatch(hideloading()) : dispatch(showloading())
             const res = await axios.post(`${DOMAIN}user/registration`, value, {})
             dispatch(hideloading())
-            console.log("res.data",res.data)
+            console.log("res.data", res.data)
             if (res.data) navigate("/singIn");
             setErr(res.message); console.log(res.message)
         } catch (err) {
@@ -151,8 +152,8 @@ const MyForm = () => {
                     err={err}
                 />
                 <Button
-                variant="standard"
-            className="bg-info"
+                    variant="standard"
+                    className="bg-info"
                     size="large"
                     onClick={Registration}>Register
                 </Button>

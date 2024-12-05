@@ -14,27 +14,43 @@ const { registration_control,
     update_product_controler,
     delete_product_controler,
     change_password_controler,
-    create_controler
+    createUser_controler,
+    deleteUser_controler,
+    
 
 } = require("../controlers/users_controler");
 const { validate } = require("../Middleware/validationMiddleware");
-const { createUserSchema, registrationSchema, loginSchema } = require("../validation/schema");
+const { createUserSchema,
+    registrationSchema,
+    loginSchema,
+    forgotPasswordSchema,
+    restetPasswordSchema,
+    addProductSchema,
+    delateUserSchema,
+} = require("../validation/schema");
 
 
 // Router.post("/registration", registration_control);
 // Router.post("/login",login_control);
-Router.post("/changePassword",check_token,change_password_controler);
-Router.post("/forgotPassword", forgot_password_controler);
-Router.post("/resetPassword",reset_password_controler);
-Router.post("/addProduct", check_token,add_product_control);
+Router.post("/changePassword", check_token, change_password_controler);
+// Router.post("/forgotPassword", forgot_password_controler);
+// Router.post("/resetPassword", reset_password_controler);
+// Router.post("/addProduct", check_token, add_product_control);
+// Router.get("/productList", check_token, fetch_product_controler);
+// Router.post("/updateProduct", check_token, update_product_controler);
+// Router.post("/deleteProduct", check_token, delete_product_controler);
+
+
+Router.post("/registraion", validate(registrationSchema, registration_control));
+Router.post("/login", validate(loginSchema), login_control);
+Router.post("/forgotPassword", check_token, validate(forgotPasswordSchema), forgot_password_controler);
+Router.post("/resetPassword", check_token, validate(restetPasswordSchema), reset_password_controler);
+Router.post("/addProduct",check_token,validate(addProductSchema),add_product_control);
 Router.get("/productList",check_token,fetch_product_controler);
 Router.post("/updateProduct",check_token,update_product_controler);
 Router.post("/deleteProduct",check_token,delete_product_controler);
-
-
-Router.post("/registraion",validate(registrationSchema,registration_control));
-Router.post("login",validate(loginSchema),login_control);
-Router.post("/createUser",check_token,validate(createUserSchema),create_controler)
+Router.post("/createUser", check_token, validate(createUserSchema), createUser_controler);
+Router.post("/deleteUser",check_token,validate(delateUserSchema),deleteUser_controler);
 // schemas
 // Router.post("/registration", async (req, res) => {
 //     try {
