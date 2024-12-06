@@ -32,16 +32,11 @@ const registration_control = async (req, res) => {
     try {
         let data = req.body;
         const hash_password = bcrypt.hashSync(data["password"], saltRounds)
-        const { error } = registration_val({ data })
         data["password"] = hash_password
-        if (error) return res.send(error.details.map(err => err.message));
         data["role"] = "admin"
-        // const newUser = new User_schema(data);
-        //______________________
         const newUser = new userSchema(data);
-        //______________________
         const response = await newUser.save();
-        res.send({ response })
+        res.send(response)
     } catch (error) {
         res.status(401).send(error.message)
     }
@@ -53,11 +48,9 @@ const registration_control = async (req, res) => {
 const login_control = async (req, res) => {
     try {
         const user_data = req.body;
-        const { error } = login_val({ data: user_data })
-        if (error) return res.status(401).send(error.details.map(err => err.message));
         const db_data = await userSchema.findOne({ Email: user_data.Email } ?? { Mobile: user_data.Mobile });
-        const { Email, _id, role } = db_data;
         if (db_data?.password && db_data?.Email) {
+            const { Email, _id, role } = db_data;
             const isMatch_password = bcrypt.compareSync(user_data.password, db_data["password"]);
             if (isMatch_password) {
                 const data = { Email, _id, role }
@@ -67,7 +60,7 @@ const login_control = async (req, res) => {
         }
         res.status(401).send("invalid userName and password");
     } catch (error) {
-
+        console.log(error)
         res.status(401).send(error.message)
     }
 };
@@ -251,7 +244,7 @@ const createUser_controler = async (req, res) => {
         let resp = await newData.save();
         res.send({ resp })
     } catch (error) {
-        res.status(401).send({ error: error.errmsg })
+        res.status(401).send(error)
     }
 };
 

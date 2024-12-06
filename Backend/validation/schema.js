@@ -4,7 +4,7 @@ exports.createUserSchema = Joi.object({
     Name: Joi.string().required().min(2),
     Email: Joi.string().required().email(),
     password: Joi.string().required().min(4),
-    confirm_password: Joi.string().required().valid(Joi.ref("password")),
+    confirmPassword: Joi.string().required().valid(Joi.ref("password")),
 });
 
 exports.registrationSchema = Joi.object({

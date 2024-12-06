@@ -35,7 +35,7 @@ const Singin = () => {
                 });
                 return setErr(errObj);
             }
-            // setErr({});
+            setErr({});
             const res = await axios.post(`${DOMAIN}user/login`, usrdata,);
             if (res?.status === 200 ?? res.data.token){
                 const token = JSON.stringify(res.data.token);

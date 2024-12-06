@@ -10,16 +10,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { showloading, hideloading } from "../../Redux/AlertSclice";
+
 
 
 const MyForm = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [usrData, setUsrData] = useState({})
     const [err, setErr] = useState({})
-    
+
     const onChangeEvent = (obj) => {
         setUsrData((lastValue) => {
             lastValue[obj.id] = obj.value;
@@ -41,19 +39,41 @@ const MyForm = () => {
 
             }
             setErr("")
-            err ? dispatch(hideloading()) : dispatch(showloading())
-            const res = await axios.post(`${DOMAIN}user/registration`, value, {})
-            dispatch(hideloading())
+            const res = await axios.post(`${DOMAIN}user/registration`, value)
             console.log("res.data", res.data)
             if (res.data) navigate("/singIn");
-            setErr(res.message); console.log(res.message)
+            setErr(res.message); 
+
         } catch (err) {
-            const match = err.response.data.match(/dup key: \{ (\w+):/);
-            if (match && match[1]) {
-                const field = match[1]
-                setErr({ [field]: `${field} is already exist` })
+            if (err.response?.data) {
+                const errorData = err.response.data;
+
+                // Check if errorData is a string and can be matched
+                if (typeof errorData === 'string') {
+                    const match = errorData.match(/dup key: \{ (\w+): "(.*?)"/);
+                    if (match) {
+                        const field = match[1];
+                        const value = match[2];
+                        setErr({ [field]: ` "${value}" is already exist` });
+                    } else {
+                        setErr({ general: 'An unknown error occurred' });
+                    }
+                }
+                // If errorData is an object
+                else if (typeof errorData === 'object' && errorData.keyValue) {
+                    const field = Object.keys(errorData.keyValue)[0];
+                    const value = errorData.keyValue[field];
+                    setErr({ [field]: ` "${value}" is already exist` });
+                }
+                // Fallback for unknown formats
+                else {
+                    setErr({ general: 'Error format is not recognized' });
+                }
+            } else {
+                setErr({ general: 'Failed to connect to the server' });
             }
         }
+
 
     };
 
