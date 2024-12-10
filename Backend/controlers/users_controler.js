@@ -248,6 +248,17 @@ const createUser_controler = async (req, res) => {
     }
 };
 
+const userList_controler = async (req, res) => {
+    try {
+        const { _id: create_by } = getToken_data({ headers: req.headers });
+        const user_list = await userSchema.find({ create_by });
+        if (user_list.length) return res.send(user_list)
+        res.status(401).send({ msg: "No User Found" })
+    } catch (error) {
+        res.status(401).send(error)
+    }
+};
+
 const deleteUser_controler = async (req, res) => {
     const { Email } = req.body;
     try {
@@ -273,6 +284,7 @@ module.exports = {
     update_product_controler,
     delete_product_controler,
     createUser_controler,
+    userList_controler,
     deleteUser_controler
 }
 

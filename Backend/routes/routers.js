@@ -2,8 +2,6 @@ const Router = require("express").Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const { registration_val, login_val } = require("../validation/validation");
-const User_schema = require("../Models/schema");
 const { create_token, check_token } = require("../Middleware/authMiddleware");
 const { registration_control,
     login_control,
@@ -16,6 +14,7 @@ const { registration_control,
     change_password_controler,
     createUser_controler,
     deleteUser_controler,
+    userList_controler,
 
 
 } = require("../controlers/users_controler");
@@ -27,6 +26,7 @@ const { createUserSchema,
     restetPasswordSchema,
     addProductSchema,
     delateUserSchema,
+    userListSchema,
 } = require("../validation/schema");
 
 
@@ -51,6 +51,7 @@ Router.post("/updateProduct", check_token, update_product_controler);
 Router.post("/deleteProduct", check_token, delete_product_controler);
 Router.post("/createUser", check_token, validate(createUserSchema), createUser_controler);
 Router.post("/deleteUser", check_token, validate(delateUserSchema), deleteUser_controler);
+Router.get("/userList",check_token,userList_controler)
 // schemas
 // Router.post("/registration", async (req, res) => {
 //     try {

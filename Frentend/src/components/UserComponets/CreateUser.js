@@ -126,7 +126,7 @@ const CreateUser = () => {
                     className="bg-info"
                     size="large"
                     onClick={createUser}
-                >Register
+                >Create
                 </Button>
             </div>
         </Box>

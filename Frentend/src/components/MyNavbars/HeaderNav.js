@@ -125,6 +125,13 @@ function HeaderNav() {
 
               <NavDropdown.Item as={Link} to="/updateProduct">Update Product</NavDropdown.Item>
             </NavDropdown>
+            <NavDropdown title="Users" id="basic-nav-dropdown" className="custom-dropdown">
+              <NavDropdown.Item as={Link} to="/createuser">Create User</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/showusers">Show Users</NavDropdown.Item>
+              {/* <NavDropdown.Item as="button" onClick={ProductList}>List Product</NavDropdown.Item> */}
+
+              {/* <NavDropdown.Item as={Link} to="/updateProduct">Update Product</NavDropdown.Item> */}
+            </NavDropdown>
             </>)
             :("")
             }

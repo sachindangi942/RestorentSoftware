@@ -14,12 +14,13 @@ import AddProduct from "./components/Products/AddProduct";
 import { ProductList } from "./components/Products/ProductList";
 import Logout from "./components/Logout";
 import CreateUser from "./components/UserComponets/CreateUser";
+import Showusers from "./components/UserComponets/Showusers";
 
 function App() {
   // const { loading } = useSelector(state => state.alert);
   return (
     <Router future={{ v7_relativeSplatPath: true }}>
-      <HeaderNav/>
+      <HeaderNav />
       {/* {!token ? <HeaderNav /> : <HeaderNav2 />} */}
       {
         <Routes>
@@ -38,7 +39,7 @@ function App() {
 
           <Route path="/logout" element={
             <PublicRoute>
-              <Logout/>
+              <Logout />
             </PublicRoute>
 
           } />
@@ -55,15 +56,21 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path="/listProduct" element = {
+          <Route path="/listProduct" element={
             <ProtectedRoute>
-              <ProductList/>
+              <ProductList />
             </ProtectedRoute>
           } />
+          <Route path="/createuser" element={
+            <ProtectedRoute>
+              <CreateUser/>
+            </ProtectedRoute>
+          } />
+
           <Route path="*" element={<PageNoteFound />} />
-          <Route path="/createuser" element = {<CreateUser/>}/>
+          <Route path="/showusers" element = {<Showusers/>}/>
         </Routes>
-        
+
       }
     </Router>
   );
