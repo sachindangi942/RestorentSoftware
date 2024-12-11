@@ -4,11 +4,13 @@ import { useState } from "react";
 import axios from "axios";
 import { DOMAIN } from "../MyForms/Configs";
 import AddProduct_val from "../../Validations/AddProduct_val";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { hideloading, showloading } from "../../Redux/AlertSclice";
 
 
 const AddProduct = () => {
     const token = useSelector((state) => state.auth.token)
+    const dispatch = useDispatch();
     const [userData, setUsrData] = useState({});
     const [err, setErr] = useState();
 
@@ -33,12 +35,13 @@ const AddProduct = () => {
                 return setErr(errObj);
             }
             setErr({})
+            dispatch(showloading())
             await axios.post(`${DOMAIN}user/addProduct`, value, {
                 headers: {
                     Authorization: `Bearer ${Token}`
                 }
             })
-            // console.log(res)
+            dispatch(hideloading());
             alert("Successfull Add Product");
             setUsrData('');
         } catch (error) {

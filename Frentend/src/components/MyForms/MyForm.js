@@ -10,6 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { hideloading, showloading } from "../../Redux/AlertSclice";
 
 
 
@@ -17,6 +19,7 @@ const MyForm = () => {
     const navigate = useNavigate();
     const [usrData, setUsrData] = useState({})
     const [err, setErr] = useState({})
+    const dispatch = useDispatch();
 
     const onChangeEvent = (obj) => {
         setUsrData((lastValue) => {
@@ -39,10 +42,11 @@ const MyForm = () => {
 
             }
             setErr("")
+            dispatch(showloading());
             const res = await axios.post(`${DOMAIN}user/registration`, value)
-            console.log("res.data", res.data)
+            dispatch(hideloading());
             if (res.data) navigate("/singIn");
-            setErr(res.message); 
+            setErr(res.message);
 
         } catch (err) {
             if (err.response?.data) {

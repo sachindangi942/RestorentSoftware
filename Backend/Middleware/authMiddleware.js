@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 const create_token = ({ data }) => {
-    return jwt.sign(data, SECRET_KEY,)
+    return jwt.sign(data, SECRET_KEY,{expiresIn:"5m"})
 };
 const check_token = (req, res, next) => {
     const token = req.headers["authorization"]?.split(" ")[1];

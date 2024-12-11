@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import AlerScliceReducer  from "./AlertSclice";
+import AlertReducer from "./AlertSclice";
 import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./Fetures/Authslice"
 // import productlistReducer from "./Fetures/ProductList_slice"
@@ -10,7 +11,8 @@ import FormReducer from "./Fetures/Formslice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  form: FormReducer
+  form: FormReducer,
+  alert:AlertReducer
   
 
 });

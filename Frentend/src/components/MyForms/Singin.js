@@ -8,6 +8,7 @@ import Login_val from "../../Validations/Login_Val";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../Redux/Fetures/Authslice";
+import { hideloading, showloading } from "../../Redux/AlertSclice";
 
 const Singin = () => {
     const [usrdata, setUsrData] = useState({})
@@ -36,7 +37,9 @@ const Singin = () => {
                 return setErr(errObj);
             }
             setErr({});
+            dispatch(showloading())
             const res = await axios.post(`${DOMAIN}user/login`, usrdata,);
+            dispatch(hideloading())
             if (res?.status === 200 ?? res.data.token){
                 const token = JSON.stringify(res.data.token);
                 dispatch(setToken(token));

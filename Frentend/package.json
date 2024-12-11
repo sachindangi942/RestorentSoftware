@@ -2,8 +2,7 @@
   "name": "restrorent",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://sachindangi.s3-website.eu-north-1.amazonaws.com"
-,
+  "homepage": "http://sachindangi.s3-website.eu-north-1.amazonaws.com",
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@emotion/react": "^11.13.5",
@@ -13,9 +12,11 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.22.4",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "joi": "^17.13.3",
+    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
