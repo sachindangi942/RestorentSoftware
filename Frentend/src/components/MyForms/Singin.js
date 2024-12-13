@@ -6,16 +6,17 @@ import { DOMAIN } from "./Configs";
 import { Link, useNavigate } from "react-router-dom";
 import Login_val from "../../Validations/Login_Val";
 import { Button } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../../Redux/Fetures/Authslice";
 import { hideloading, showloading } from "../../Redux/AlertSclice";
+import { setErr } from "../../Redux/Fetures/ErrSlice";
 
 const Singin = () => {
     const [usrdata, setUsrData] = useState({})
-    const [err, setErr] = useState({})
+    // const [err, setErr] = useState({})
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const err = useSelector(state => state.err.err)
 
     const onChangeData = (obj) => {
         setUsrData((lastValue) => {
@@ -34,9 +35,9 @@ const Singin = () => {
                     errObj[detail.path[0]] = detail.message;
 
                 });
-                return setErr(errObj);
+                return dispatch(setErr(errObj));
             }
-            setErr({});
+            dispatch(setErr({}));
             dispatch(showloading())
             const res = await axios.post(`${DOMAIN}user/login`, usrdata,);
             dispatch(hideloading())
@@ -48,11 +49,11 @@ const Singin = () => {
             }
 
         } catch (error) {
-            // dispatch(hideloading())
+            console.log(error)
             if (error.response) {
-                setErr(error.response.data);
+                dispatch(setErr(error.response.data));
             } else {
-                setErr("Server error. Please try again later.");
+                dispatch(setErr("Server error. Please try again later."));
             }
         }
     }

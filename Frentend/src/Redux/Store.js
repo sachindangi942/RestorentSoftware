@@ -7,7 +7,7 @@ import authReducer from "./Fetures/Authslice"
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import FormReducer from "./Fetures/Formslice";
-import ErrReducer from "./Fetures/ErrorSlice"
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
