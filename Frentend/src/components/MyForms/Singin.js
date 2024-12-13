@@ -40,15 +40,15 @@ const Singin = () => {
             dispatch(showloading())
             const res = await axios.post(`${DOMAIN}user/login`, usrdata,);
             dispatch(hideloading())
-            if (res?.status === 200 ?? res.data.token){
+            if (res?.status === 200 ?? res.data.token) {
                 const token = JSON.stringify(res.data.token);
                 dispatch(setToken(token));
                 // localStorage.setItem("token",JSON.stringify(res.data.token))
                 navigate("/")
             }
-    
+
         } catch (error) {
-            console.log(error)
+            // dispatch(hideloading())
             if (error.response) {
                 setErr(error.response.data);
             } else {

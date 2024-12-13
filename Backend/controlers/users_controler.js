@@ -11,23 +11,9 @@ const sendEmail = require("../Utils/sendEmail");
 const userSchema = require("../Models/User_schema");
 //_______________________________________
 
-// const registration_control = async (req, res) => {
-//     try {
-//         let data = req.body;
-//         const hash_password = bcrypt.hashSync(data["password"], saltRounds)
-//         const { error } = registration_val({ data })
-//         data["password"] = hash_password
-//         if (error) return res.send(error.details.map(err => err.message));
-//         data["role"] = "admin"
-//         const newUser = new User_schema(data);
-//         const response = await newUser.save();
-//         res.send({ response })
-//     } catch (error) {
-//         res.status(401).send(error.message)
-//     }
-// };
 
-//___________________________________________________AdminRegistration_________________________________
+
+//___________________________________________________MiddlwareuseControler_________________________________
 const registration_control = async (req, res) => {
     try {
         let data = req.body;
@@ -42,9 +28,8 @@ const registration_control = async (req, res) => {
     }
 };
 
-//__________________________________________________________________________________________________
 
-//___________________________________________________Adminlogin_________________________________
+
 const login_control = async (req, res) => {
     try {
         const user_data = req.body;
@@ -65,8 +50,59 @@ const login_control = async (req, res) => {
     }
 };
 
-//___________________________________________________Adminlogin_________________________________
+const change_password_controler = async (req, res) => {
+    try {
+        const { Email, newPassword } = req.body;
+        const { error } = change_password_val({ data: req.body });
+        if (error) return res.send(error.details[0].message)
+        const User = await User_schema.findOne({ Email });
+        if (!User) return res.send("invalide password");
+        const hash_password = bcrypt.hashSync(newPassword, saltRounds);
+        User.password = hash_password;
+        await User.save();
+        res.send("password successfully change")
+    } catch (error) {
+        res.send(error.message);
+    }
 
+};
+
+const forgot_password_controler = async (req, res) => {
+    try {
+        // const { error } = forgot_password_val({ data: req.body });
+        // if (error) return res.send(error.details[0].message);
+        const User = await User_schema.findOne({ Email: req.body.email });
+        if (!User) return res.send("invalide user");
+        const token = create_token({ data: req.body });
+        User["resetPasswordToken"] = token;
+        User["resetPasswordExpires"] = Date.now() + 10 * 60 * 1000;
+        await User.save();
+        // const resetLink = `http://localhost:7000/user/resetPassword/${token}`;
+        const clickableLink = `<a href="http://localhost:7000/user/resetPassword/${token}">Reset your password</a>`
+        await sendEmail(User.Email, "password reset", `<p>Click the following link to reset your password:</p>${clickableLink}`);
+        res.send({ success: true, msg: "password reset link successfully send for Email" })
+
+    } catch (error) {
+        res.send(error.errmsg);
+    }
+};
+
+//____________________________________________________________________________________
+// const registration_control = async (req, res) => {
+//     try {
+//         let data = req.body;
+//         const hash_password = bcrypt.hashSync(data["password"], saltRounds)
+//         const { error } = registration_val({ data })
+//         data["password"] = hash_password
+//         if (error) return res.send(error.details.map(err => err.message));
+//         data["role"] = "admin"
+//         const newUser = new User_schema(data);
+//         const response = await newUser.save();
+//         res.send({ response })
+//     } catch (error) {
+//         res.status(401).send(error.message)
+//     }
+// };
 
 // const login_control = async (req, res) => {
 //     try {
@@ -88,42 +124,42 @@ const login_control = async (req, res) => {
 //     }
 // };
 
-const change_password_controler = async (req, res) => {
-    try {
-        const { Email, newPassword } = req.body;
-        const { error } = change_password_val({ data: req.body });
-        if (error) return res.send(error.details[0].message)
-        const User = await User_schema.findOne({ Email });
-        if (!User) return res.send("invalide password");
-        const hash_password = bcrypt.hashSync(newPassword, saltRounds);
-        User.password = hash_password;
-        await User.save();
-        res.send("password successfully change")
-    } catch (error) {
-        res.send(error.message);
-    }
+// const change_password_controler = async (req, res) => {
+//     try {
+//         const { Email, newPassword } = req.body;
+//         const { error } = change_password_val({ data: req.body });
+//         if (error) return res.send(error.details[0].message)
+//         const User = await User_schema.findOne({ Email });
+//         if (!User) return res.send("invalide password");
+//         const hash_password = bcrypt.hashSync(newPassword, saltRounds);
+//         User.password = hash_password;
+//         await User.save();
+//         res.send("password successfully change")
+//     } catch (error) {
+//         res.send(error.message);
+//     }
 
-}
+// }
 
-const forgot_password_controler = async (req, res) => {
-    try {
-        const { error } = forgot_password_val({ data: req.body });
-        if (error) return res.send(error.details[0].message);
-        const User = await User_schema.findOne({ Email: req.body.email });
-        if (!User) return res.send("invalide user");
-        const token = create_token({ data: req.body });
-        User["resetPasswordToken"] = token;
-        User["resetPasswordExpires"] = Date.now() + 10 * 60 * 1000;
-        await User.save();
-        // const resetLink = `http://localhost:7000/user/resetPassword/${token}`;
-        const clickableLink = `<a href="http://localhost:7000/user/resetPassword/${token}">Reset your password</a>`
-        await sendEmail(User.Email, "password reset", `<p>Click the following link to reset your password:</p>${clickableLink}`);
-        res.send({ success: true, msg: "password reset link successfully send for Email" })
+// const forgot_password_controler = async (req, res) => {
+//     try {
+//         const { error } = forgot_password_val({ data: req.body });
+//         if (error) return res.send(error.details[0].message);
+//         const User = await User_schema.findOne({ Email: req.body.email });
+//         if (!User) return res.send("invalide user");
+//         const token = create_token({ data: req.body });
+//         User["resetPasswordToken"] = token;
+//         User["resetPasswordExpires"] = Date.now() + 10 * 60 * 1000;
+//         await User.save();
+//         // const resetLink = `http://localhost:7000/user/resetPassword/${token}`;
+//         const clickableLink = `<a href="http://localhost:7000/user/resetPassword/${token}">Reset your password</a>`
+//         await sendEmail(User.Email, "password reset", `<p>Click the following link to reset your password:</p>${clickableLink}`);
+//         res.send({ success: true, msg: "password reset link successfully send for Email" })
 
-    } catch (error) {
-        res.send(error.errmsg);
-    }
-};
+//     } catch (error) {
+//         res.send(error.errmsg);
+//     }
+// };
 
 const reset_password_controler = async (req, res) => {
 
