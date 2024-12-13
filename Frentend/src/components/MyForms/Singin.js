@@ -49,7 +49,7 @@ const Singin = () => {
             }
 
         } catch (error) {
-            console.log(error)
+            dispatch(hideloading())
             if (error.response) {
                 dispatch(setErr(error.response.data));
             } else {
